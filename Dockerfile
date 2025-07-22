@@ -1,11 +1,17 @@
-FROM docker.io/nginx:alpine
+FROM centos:7
 
-LABEL maintainer="you@example.com"
+LABEL maintainer="hanumeh@gmail.com"
 
-RUN rm -rf /usr/share/nginx/html/*
+RUN yum install -y java httpd zip unzip curl && yum clean all
 
-COPY ./webapp/ /usr/share/nginx/html/
+WORKDIR /var/www/html/
 
-EXPOSE 80
+# Download Editorial template ZIP from html5up.net
+RUN curl -L -o editorial.zip https://html5up.net/uploads/demos/editorial.zip && \
+    unzip editorial.zip && \
+    cp -rvf editorial/* . && \
+    rm -rf editorial editorial.zip
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80 22
+
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
