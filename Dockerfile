@@ -7,14 +7,14 @@ RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* && \
     yum clean all && yum makecache
 
-# Install required packages
-RUN yum install -y java httpd zip unzip wget && yum clean all
+# Install required packages including curl
+RUN yum install -y java httpd zip unzip curl && yum clean all
 
 # Set working directory
 WORKDIR /var/www/html/
 
-# Download and unzip the website template
-RUN wget https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip && \
+# Use curl to download and extract the website template
+RUN curl -L -o photogenic.zip https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip && \
     unzip photogenic.zip && \
     cp -rvf photogenic/* . && \
     rm -rf photogenic photogenic.zip
